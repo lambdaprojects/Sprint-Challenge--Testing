@@ -1,5 +1,5 @@
 const express = require("express");
-
+const GamesRouter = require("../games/routers/gameRouter");
 const server = express();
 
 server.use(express.json());
@@ -9,4 +9,5 @@ server.get("/", async (req, res) => {
   //res.send("<h2>The api is up!</h2>");
 });
 
+server.use("/games", GamesRouter);
 module.exports = server;
