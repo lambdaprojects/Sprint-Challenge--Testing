@@ -53,4 +53,55 @@ describe("TS3: TESTING GAMEROUTER.JS", () => {
         .expect(422);
     });
   });
+
+  describe("TS3.2: TESTING GET", () => {
+    it("TC13: GET RES - EMPTY ARRAY - NO DATA AVAILABLE", async () => {
+      await req(server)
+        .get("/games")
+        .then(res => {
+          const text = JSON.parse(res.text);
+          expect(text.games).toHaveLength(0);
+        });
+    });
+
+    it("TC14: GET RES Status - 200 - With content", async () => {
+      const addGame = {
+        title: "Pacman",
+        genre: "Arcade",
+        releaseYear: 1980
+      };
+      await req(server)
+        .post("/games")
+        .send(addGame);
+      await req(server)
+        .get("/games")
+        .expect(200);
+    });
+
+    it("TC14: GET RES Status - 200 - CHECK ROW LENGTH", async () => {
+      let addGame = {
+        title: "Pacman",
+        genre: "Arcade",
+        releaseYear: 1980
+      };
+      await req(server)
+        .post("/games")
+        .send(addGame);
+      addGame = {
+        title: "Minesweeper",
+        genre: "Desktop",
+        releaseYear: 1985
+      };
+      await req(server)
+        .post("/games")
+        .send(addGame);
+
+      await req(server)
+        .get("/games")
+        .then(res => {
+          const text = JSON.parse(res.text);
+          expect(text.games).toHaveLength(2);
+        });
+    });
+  });
 });
