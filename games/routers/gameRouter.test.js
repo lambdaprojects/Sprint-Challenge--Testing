@@ -113,7 +113,7 @@ describe("TS3: TESTING GAMEROUTER.JS", () => {
         });
     });
   });
-  describe("TS3.3:: GAME ID NOT AVAILABLE", () => {
+  describe("TS3.3:: TESTING GET - GET BY ID", () => {
     it("TC17: GET RES STATUS - 404 - GAME ID NOT AVAILABLE", async () => {
       await req(server)
         .get("/games/100")
@@ -133,10 +133,37 @@ describe("TS3: TESTING GAMEROUTER.JS", () => {
         .then(res => {
           const text = JSON.parse(res.text);
           gameId = text.games.id;
-          console.log("---------text ---------" + gameId);
           req(server)
             .get(`/games/${gameId}`)
             .expect(200);
+        });
+    });
+  });
+
+  describe("TS3.4:: TESTING DELETE", () => {
+    it("TC20: GET RES STATUS - 404 - GAME ID NOT AVAILABLE", async () => {
+      await req(server)
+        .delete("/games/100")
+        .expect(404);
+    });
+
+    it("TC21: GET RES STATUS - 200 - DELETE SUCCESSFUL", async () => {
+      const addGame = {
+        title: "Pacman",
+        genre: "Arcade",
+        releaseYear: 1980
+      };
+      let gameId;
+      await req(server)
+        .post("/games")
+        .send(addGame)
+        .then(res => {
+          const text = JSON.parse(res.text);
+          gameId = text.games.id;
+          console.log("---------text ---------" + gameId);
+          req(server)
+            .delete(`/games/${gameId}`)
+            .expect(400);
         });
     });
   });

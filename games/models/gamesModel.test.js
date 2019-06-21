@@ -75,4 +75,20 @@ describe("TS2: GAMESMODEL.JS TEST SUITE", () => {
       expect(game).toHaveLength(1);
     });
   });
+
+  describe("TS2.4:: TESTING REMOVE", () => {
+    it("TC22: Delete a single game", async () => {
+      await GamesModel.add({
+        title: "Pacman",
+        genre: "Arcade",
+        releaseYear: 1980
+      });
+      let games = await db("games")
+        .where({ id: "1" })
+        .first();
+      await GamesModel.remove(games.id);
+      games = await db("games");
+      expect(games).toHaveLength(0);
+    });
+  });
 });

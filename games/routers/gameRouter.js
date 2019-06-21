@@ -43,6 +43,17 @@ router.get("/:id", validateGameId, async (req, res) => {
   }
 });
 
+router.delete("/:id", validateGameId, async (req, res) => {
+  try {
+    const games = await GamesModel.remove(req.game.id);
+    res.status(200).json({ message: "Successfully deleted" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error_message: `There was an error retrieving the games` });
+  }
+});
+
 //This is a custom middleware to validate a game
 // Following are the validations:
 // 1. Validates the body on a request to create a new game
