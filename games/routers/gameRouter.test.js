@@ -55,7 +55,7 @@ describe("TS3: TESTING GAMEROUTER.JS", () => {
   });
 
   describe("TS3.2: TESTING GET", () => {
-    it("TC13: GET RES - EMPTY ARRAY - NO DATA AVAILABLE", async () => {
+    it("TC13: GET RES - EMPTY ARRAY - NO DATA AVAILABLE - ARRAY LENGTH 0", async () => {
       await req(server)
         .get("/games")
         .then(res => {
@@ -64,7 +64,16 @@ describe("TS3: TESTING GAMEROUTER.JS", () => {
         });
     });
 
-    it("TC14: GET RES Status - 200 - With content", async () => {
+    it("TC14: GET RES - IS ALWAYS AN ARRAY", async () => {
+      await req(server)
+        .get("/games")
+        .then(res => {
+          const text = JSON.parse(res.text);
+          expect(Array.isArray(text.games)).toBe(true);
+        });
+    });
+
+    it("TC15: GET RES Status - 200 - With content", async () => {
       const addGame = {
         title: "Pacman",
         genre: "Arcade",
@@ -78,7 +87,7 @@ describe("TS3: TESTING GAMEROUTER.JS", () => {
         .expect(200);
     });
 
-    it("TC14: GET RES Status - 200 - CHECK ROW LENGTH", async () => {
+    it("TC16: GET RES STATUS - 200 - CHECK ROW LENGTH", async () => {
       let addGame = {
         title: "Pacman",
         genre: "Arcade",
@@ -101,6 +110,33 @@ describe("TS3: TESTING GAMEROUTER.JS", () => {
         .then(res => {
           const text = JSON.parse(res.text);
           expect(text.games).toHaveLength(2);
+        });
+    });
+  });
+  describe("TS3.3:: GAME ID NOT AVAILABLE", () => {
+    it("TC17: GET RES STATUS - 404 - GAME ID NOT AVAILABLE", async () => {
+      await req(server)
+        .get("/games/100")
+        .expect(404);
+    });
+
+    it("TC18: GET RES STATUS - 200 - GAME ID AVAILABLE", async () => {
+      const addGame = {
+        title: "Pacman",
+        genre: "Arcade",
+        releaseYear: 1980
+      };
+      let gameId;
+      await req(server)
+        .post("/games")
+        .send(addGame)
+        .then(res => {
+          const text = JSON.parse(res.text);
+          gameId = text.games.id;
+          console.log("---------text ---------" + gameId);
+          req(server)
+            .get(`/games/${gameId}`)
+            .expect(200);
         });
     });
   });

@@ -63,4 +63,16 @@ describe("TS2: GAMESMODEL.JS TEST SUITE", () => {
       expect(games).toHaveLength(3);
     });
   });
+
+  describe("TS2.3: TESTING GET BY ID", () => {
+    it("TC19: Get the record from games db by id", async () => {
+      const addGame = await GamesModel.add({
+        title: "Pacman",
+        genre: "Arcade",
+        releaseYear: 1980
+      });
+      const game = await GamesModel.getById(addGame.id);
+      expect(game).toHaveLength(1);
+    });
+  });
 });

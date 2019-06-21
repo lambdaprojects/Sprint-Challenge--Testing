@@ -28,6 +28,21 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", validateGameId, async (req, res) => {
+  try {
+    const games = await GamesModel.getById(req.game.id);
+    if (games.length > 0) {
+      res.status(200).json({ games: games });
+    } else {
+      res.status(204).json({ games: [] });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error_message: `There was an error retrieving the games` });
+  }
+});
+
 //This is a custom middleware to validate a game
 // Following are the validations:
 // 1. Validates the body on a request to create a new game
