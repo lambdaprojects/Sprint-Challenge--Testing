@@ -4,6 +4,10 @@ module.exports = {
   add
 };
 
-function add(game) {
-  return null;
+async function add(game) {
+  const [id] = await db("games").insert(game);
+
+  return db("games")
+    .where({ id })
+    .first();
 }
