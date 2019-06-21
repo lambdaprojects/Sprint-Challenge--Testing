@@ -42,5 +42,25 @@ describe("TS2: GAMESMODEL.JS TEST SUITE", () => {
       const games = await GamesModel.get();
       expect(games[0].title).toBe("Pacman");
     });
+
+    it("TC8: Positive - Test for retrieving multiple records", async () => {
+      await GamesModel.add({
+        title: "Pacman",
+        genre: "Arcade",
+        releaseYear: 1980
+      });
+      await GamesModel.add({
+        title: "Minesweeper",
+        genre: "Computer",
+        releaseYear: 1985
+      });
+      await GamesModel.add({
+        title: "Tetris",
+        genre: "Video",
+        releaseYear: 1990
+      });
+      const games = await GamesModel.get();
+      expect(games).toHaveLength(3);
+    });
   });
 });
